@@ -30,7 +30,9 @@ def main():
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
+    kk_namida_img = pg.image.load("ex02/fig/8.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+    kk_namida_img = pg.transform.rotozoom(kk_namida_img, 0, 2.0)
     kk_hanten_img = pg.transform.flip(kk_img, True, False)
     kaiten = {
         (-5, -5):pg.transform.rotozoom(kk_img, -45, 1.0),
@@ -47,26 +49,23 @@ def main():
     bb_img = pg.Surface((20, 20))  # 練習1:透明のSurfaceを作る
     bb_img.set_colorkey((0, 0, 0))  # 練習1:黒い部分を透明にする
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)  # 練習1:赤い半径10の円を描く
-    bb_rct = bb_img.get_rect()  #練習2: 爆弾SurfaceのRectを抽出
+    bb_rct = bb_img.get_rect()  # 練習2: 爆弾SurfaceのRectを抽出
     bb_rct.centerx = random.randint(0, WIDTH)
     bb_rct.centery = random.randint(0, HEIGHT)
     vx, vy = +5, +5  # 練習2:爆弾の速度
 
     clock = pg.time.Clock()
     tmr = 0
+    flag = 0
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
-            
-        if kk_rct.colliderect(bb_rct):
-            print("Game Over")
-            return
 
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
         for k, tpl in delta.items():
-            if key_lst[k]:  #キーが押されたら
+            if key_lst[k]:  # キーが押されたら
                 sum_mv[0] += tpl[0]
                 sum_mv[1] += tpl[1]
 
@@ -79,7 +78,12 @@ def main():
         for k, val in kaiten.items():
             if mv_tpl == k:
                 kk_img = val
-        screen.blit(kk_img, kk_rct)  #練習3:こうかとんを移動させる
+
+        if kk_rct.colliderect(bb_rct):  # 追加機能3
+            flag = 1
+            kk_img = kk_namida_img
+        
+        screen.blit(kk_img, kk_rct)  # 練習3:こうかとんを移動させる
 
         bb_rct.move_ip(vx, vy)
         yoko, tate = check_bound(bb_rct)
@@ -94,7 +98,9 @@ def main():
         pg.display.update()
         tmr += 1
         clock.tick(50)
-
+        if flag:  # 追加機能3
+            clock.tick(1)
+            return
 
 if __name__ == "__main__":
     pg.init()
