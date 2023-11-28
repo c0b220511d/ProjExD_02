@@ -88,6 +88,8 @@ def main():
         if not tate:  # 縦方向にはみ出たら
             vy *= -1
         bb_rct.move_ip(vx, vy)  # 練習2:爆弾を移動させる
+        for i in range(int(tmr/50)):  # 追加化機能2
+            bb_rct.move_ip(vx, vy)
         screen.blit(bb_img, bb_rct)
         pg.display.update()
         tmr += 1
