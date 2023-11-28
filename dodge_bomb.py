@@ -25,14 +25,15 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
         tate = False
     return (yoko, tate)
 
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
-    kk_namida_img = pg.image.load("ex02/fig/8.png")
+    kk_sad_img = pg.image.load("ex02/fig/8.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
-    kk_namida_img = pg.transform.rotozoom(kk_namida_img, 0, 2.0)
+    kk_sad_img = pg.transform.rotozoom(kk_sad_img, 0, 2.0)
     kk_hanten_img = pg.transform.flip(kk_img, True, False)
     kaiten = {
         (-5, -5):pg.transform.rotozoom(kk_img, -45, 1.0),
@@ -57,6 +58,7 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
     flag = 0
+
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -75,13 +77,13 @@ def main():
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         
         mv_tpl = tuple(sum_mv)
-        for k, val in kaiten.items():
+        for k, val in kaiten.items():  # 追加機能1
             if mv_tpl == k:
                 kk_img = val
 
         if kk_rct.colliderect(bb_rct):  # 追加機能3
             flag = 1
-            kk_img = kk_namida_img
+            kk_img = kk_sad_img
         
         screen.blit(kk_img, kk_rct)  # 練習3:こうかとんを移動させる
 
@@ -101,6 +103,7 @@ def main():
         if flag:  # 追加機能3
             clock.tick(1)
             return
+
 
 if __name__ == "__main__":
     pg.init()
