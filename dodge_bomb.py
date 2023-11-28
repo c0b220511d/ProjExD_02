@@ -31,6 +31,17 @@ def main():
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+    kk_hanten_img = pg.transform.flip(kk_img, True, False)
+    kaiten = {
+        (-5, -5):pg.transform.rotozoom(kk_img, -45, 1.0),
+        (-5, 0):kk_img,
+        (-5, +5):pg.transform.rotozoom(kk_img, 45, 1.0),
+        (0, +5):pg.transform.rotozoom(kk_img, 90, 1.0),
+        (+5, +5):pg.transform.rotozoom(kk_hanten_img, -45, 1.0),
+        (+5, 0):kk_hanten_img,
+        (+5, -5):pg.transform.rotozoom(kk_hanten_img, 45, 1.0),
+        (0, -5):pg.transform.rotozoom(kk_hanten_img, 90, 1.0)
+    }
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
     bb_img = pg.Surface((20, 20))  # 練習1:透明のSurfaceを作る
@@ -63,6 +74,11 @@ def main():
         kk_rct.move_ip(sum_mv[0], sum_mv[1])
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
+        
+        mv_tpl = tuple(sum_mv)
+        for k, val in kaiten.items():
+            if mv_tpl == k:
+                kk_img = val
         screen.blit(kk_img, kk_rct)  #練習3:こうかとんを移動させる
 
         bb_rct.move_ip(vx, vy)
